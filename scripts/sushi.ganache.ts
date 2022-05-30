@@ -12,12 +12,8 @@ const blockGasLimit = ethers.BigNumber.from(
 ).toHexString();
 const blockNumber = Number(process.env.FORK_BLOCK);
 const defaultBalance = "0xffffffffffffffffffffff";
-const targetBalance = "0xffffffffffffffffffff";
 const sushiAddress = "0xef0881ec094552b2e128cf945ef17a6752b4ec5d";
-const sushiAbi = [
-  "function massUpdatePools(uint256[]) external",
-  "function owner() external view returns (address)",
-];
+const sushiAbi = ["function massUpdatePools(uint256[]) external"];
 
 async function main(): Promise<void> {
   /*
@@ -37,18 +33,8 @@ async function main(): Promise<void> {
   });
 
   const sushi = new ethers.Contract(sushiAddress, sushiAbi, provider);
-  const ownerAddress = await sushi.owner({
-    blockTag: Number(process.env.FORK_BLOCK),
-    gasLimit: blockGasLimit,
-  });
 
-  await fundAccounts({
-    provider,
-    accounts: [sushiAddress, ownerAddress],
-    amount: targetBalance,
-  });
-
-  const owner = await unlockAddress({ provider, address: ownerAddress });
+  const owner = provider.getSigner();
 
   console.groupEnd();
   console.timeEnd("setup-ganache");
@@ -116,51 +102,6 @@ async function prepareGanache({
   const provider = new ethers.providers.Web3Provider(ganache);
 
   return { ganache, provider };
-}
-
-interface FundAccountsOptions {
-  provider: ethers.providers.JsonRpcProvider;
-  accounts: string[];
-  amount: string;
-}
-
-async function fundAccounts({
-  provider,
-  accounts,
-  amount,
-}: FundAccountsOptions): Promise<void> {
-  const [from] = await provider.listAccounts();
-
-  for (const address of accounts) {
-    // simple contract that just selfdestructs funds to address constructor arg
-    const sendBytecode = '0x60806040526040516100c13803806100c18339818101604052810190602391906098565b8073ffffffffffffffffffffffffffffffffffffffff16ff5b600080fd5b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b6000606a826041565b9050919050565b6078816061565b8114608257600080fd5b50565b6000815190506092816071565b92915050565b60006020828403121560ab5760aa603c565b5b600060b7848285016085565b9150509291505056fe'; // prettier-ignore
-
-    const txHash = await provider.send("eth_sendTransaction", [
-      {
-        from,
-        input: `${sendBytecode}000000000000000000000000${address.slice(2)}`,
-        value: amount,
-      },
-    ]);
-
-    const receipt = await provider.waitForTransaction(txHash);
-    assert.ok(receipt.status);
-  }
-}
-
-interface UnlockAddressOptions {
-  provider: ethers.providers.JsonRpcProvider;
-  address: string;
-}
-
-async function unlockAddress({
-  provider,
-  address,
-}: UnlockAddressOptions): Promise<ethers.providers.JsonRpcSigner> {
-  await provider.send("evm_addAccount", [address, ""]);
-  const signer = await provider.getUncheckedSigner(address);
-  await signer.unlock("");
-  return signer;
 }
 
 main()

@@ -10,30 +10,14 @@ async function main(): Promise<void> {
   console.group();
 
   // Impersonate owner
-  const abi = [
-    "function massUpdatePools(uint256[]) external",
-    "function owner() external view returns (address)",
-  ];
+  const abi = ["function massUpdatePools(uint256[]) external"];
   const sushi = new ethers.Contract(
     "0xef0881ec094552b2e128cf945ef17a6752b4ec5d",
     abi,
     ethers.provider
   );
-  const ownerAddr = await sushi.owner({
-    blockTag: Number(process.env.FORK_BLOCK),
-    gasLimit: process.env.GAS_LIMIT,
-  });
-  await network.provider.request({
-    method: "hardhat_impersonateAccount",
-    params: [ownerAddr],
-  });
-  const owner = await ethers.getSigner(ownerAddr);
 
-  // Fund owner (it's a contract)
-  await network.provider.send("hardhat_setBalance", [
-    owner.address,
-    "0xffffffffffffffffffff",
-  ]);
+  const owner = (await ethers.getSigners())[0];
 
   console.groupEnd();
   console.timeEnd("setup-hardhat");
