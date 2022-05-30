@@ -3,35 +3,15 @@ pragma solidity ^0.8.6;
 
 import "ds-test/test.sol";
 
-interface Hevm {
-    function store(
-        address c,
-        bytes32 loc,
-        bytes32 val
-    ) external;
-}
-
 interface ISushi {
-    function owner() external view returns (address);
-
     function massUpdatePools(uint256[] memory) external;
 }
 
 contract sushiTest is DSTest {
-    Hevm constant hevm = Hevm(HEVM_ADDRESS);
     ISushi constant sushi = ISushi(0xEF0881eC094552b2e128Cf945EF17a6752B4Ec5d);
+    uint256[] pId = new uint256[](50);
 
     function setUp() public {
-        hevm.store(
-            address(sushi),
-            bytes32(uint256(4)),
-            bytes32(uint256(uint160(address(this))))
-        );
-        assertEq(sushi.owner(), address(this));
-    }
-
-    function testMassUpdatePools() public {
-        uint256[] memory pId = new uint256[](50);
         pId[0] = 0;
         pId[1] = 1;
         pId[2] = 2;
@@ -82,7 +62,9 @@ contract sushiTest is DSTest {
         pId[47] = 47;
         pId[48] = 48;
         pId[49] = 49;
+    }
 
+    function testMassUpdatePools() public {
         sushi.massUpdatePools(pId);
     }
 }
