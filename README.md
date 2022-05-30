@@ -30,9 +30,9 @@ Gas usage:
 
 | Framework | Gas Used  |
 | --------- | --------- |
-| Ganache   | 1,013,536 |
-| Hardhat   | 1,013,536 |
-| Foundry   | 1,016,027 |
+| Ganache   | 1,033,459 |
+| Hardhat   | 1,033,459 |
+| Foundry   | 1,119,360 |
 
 ## Usage
 
