@@ -22,9 +22,9 @@ Notes on benchmarks:
 
 | Framework | Local RPC | Cached |
 | --------- | --------- | ------ |
-| Ganache   | 2m4.615s  | 11.88s |
-| Hardhat   | 1m20.069s | 4.47s  |
-| Foundry   | 1m17.525s | 1.53s  |
+| Ganache   | 1m52.566s | 8.407s |
+| Hardhat   | 1m15.168s | 4.072s |
+| Foundry   | 1m33.040s | 2.958s |
 
 Gas usage:
 
