@@ -1,0 +1,21 @@
+{
+  "name": "sushi-update-pools-simulation",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/PraneshASP/sushi-update-pools-simulation",
+  "author": "Pranesh A S",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.5",
+    "@nomiclabs/hardhat-waffle": "^2.0.3",
+    "chai": "^4.3.6",
+    "chalk": "^4",
+    "ethereum-waffle": "^3.4.4",
+    "ethers": "^5.6.1",
+    "ganache": "^7.0.3",
+    "hardhat": "^2.9.2",
+    "micro-ftch": "^0.3.1",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.2"
+  }
+}
